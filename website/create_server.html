@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Timespan increaser</title>
+
+      <link rel="stylesheet" href="./server.css" defer>
+   </head>
+   <body>
+      <div id=maincontainer>
+         <div id=hudcontainer>
+            <button id="leaveb"></button>
+         </div>
+         <div id="scrollcontainer">
+            <button type="button" class="scrollchoice">Instagram Reels</button>
+            <button type="button" class="scrollchoice">TikTok</button>
+            <button type="button" class="scrollchoice">Youtube Shorts</button>
+         </div>
+      </div>
+   </body>
+
+   <script>
+      const choices = document.getElementById('scrollcontainer');
+
+      choices.addEventListener('click', (e) => {
+         const btn = e.target.closest('.choice');
+         if (!btn) return;
+
+         choices.hidden = true;
+      });
+   </script>
+
+</html>

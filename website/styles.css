@@ -1,0 +1,21 @@
+:root {
+   --main_background_color: #808080;
+}
+
+html {
+   height: 100%;
+}
+
+body {
+   margin: 0;
+   min-height: 100%;
+
+   font-family: Segoe UI, Segoe UI Midlevel, Segoe WP, Arial, sans-serif;
+   font-size: 16px;
+}
+
+#createcontainer {
+   display: grid;
+   flex-wrap: wrap;
+   gap: 5px;
+}
