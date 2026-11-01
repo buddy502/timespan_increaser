@@ -5,4 +5,8 @@ edition = "2024"
 
 [dependencies]
 axum = "0.8.9"
+derive = "1.0.0"
+rand = "0.10.3"
+serde = { version = "1.0.229", features = ["derive"] }
 tokio = { version = "1.54.1", features = ["macros", "rt-multi-thread"] }
+tower-http = { version = "0.7.1", features = ["fs"] }

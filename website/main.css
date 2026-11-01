@@ -1,5 +1,6 @@
 :root {
    --main_background_color: #AAAAAAAA;
+   --server_background_color: rgba(170, 170, 170, 0.83)
 }
 
 html {
@@ -41,9 +42,11 @@ h1 {
    margin: 0;
    padding: 0.3rem;
    font-size: 1em;
+   color: black;
 
    border-radius: 7px;
    border: 2px solid black;
+   text-decoration: none;
 
    width: fit-content;
    height: fit-content;
@@ -51,8 +54,10 @@ h1 {
 #createservern p {
    margin: 0;
 }
-#createservern:hover {
+#servern:hover {
    scale: 0.95;
+}
+#createservern:hover {
    box-shadow: 0 0 30px 1px rgba(0,0,0,0.3);
 }
 

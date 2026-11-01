@@ -8,26 +8,51 @@
       <link rel="stylesheet" href="./server.css" defer>
    </head>
    <body>
-      <div id=maincontainer>
-         <div id=hudcontainer>
-            <button id="leaveb"></button>
+      <div id=hudcontainer>
+         <nav><a href="/" id="leaveb">Leave</a></nav>
+         <div class="codebox">
+            <span id="codetext">{{pincode}}</span>
+            <button type="button" id="copybtn">Copy</button>
          </div>
+      </div>
+      <div id=maincontainer>
          <div id="scrollcontainer">
-            <button type="button" class="scrollchoice">Instagram Reels</button>
-            <button type="button" class="scrollchoice">TikTok</button>
-            <button type="button" class="scrollchoice">Youtube Shorts</button>
+            <!--
+               <form method="post" action="/choose">
+               <button type="button" class="scrollchoice">instagram reels</button>
+               <button type="button" class="scrollchoice">tiktok</button>
+               <button type="button" class="scrollchoice">youtube shorts</button>
+               </form>
+            -->
+            {{scrollchoice}}
          </div>
       </div>
    </body>
 
    <script>
       const choices = document.getElementById('scrollcontainer');
+      const maincontainer = document.getElementById('maincontainer');
 
       choices.addEventListener('click', (e) => {
-         const btn = e.target.closest('.choice');
+         const btn = e.target.closest('.scrollchoice');
          if (!btn) return;
 
+         maincontainer.style.opacity = 1;
          choices.hidden = true;
+      });
+
+      const codetext = document.getElementById('codetext');
+      const copybtn = document.getElementById('copybtn');
+
+      copybtn.addEventListener('click', async () => {
+         try {
+            await navigator.clipboard.writeText(codetext.textContent);
+            copybtn.textContent = 'Copied!';
+            setTimeout(() => { copybtn.textContent = 'Copy'; }, 1500);
+         } catch {
+            copybtn.textContent = 'Failed';
+            setTimeout(() => { copybtn.textContent = 'Copy'; }, 1500);
+         }
       });
    </script>
 
