@@ -9,21 +9,16 @@
    </head>
    <body>
       <div id=hudcontainer>
-         <nav><a href="/" id="leaveb">Leave</a></nav>
+         <nav>
+            <a href="/delete_choice_count" id="leaveb">Leave</a>
+         </nav>
          <div class="codebox">
-            <span id="codetext">{{pincode}}</span>
+            {{pincode}}
             <button type="button" id="copybtn">Copy</button>
          </div>
       </div>
       <div id=maincontainer>
          <div id="scrollcontainer">
-            <!--
-               <form method="post" action="/choose">
-               <button type="button" class="scrollchoice">instagram reels</button>
-               <button type="button" class="scrollchoice">tiktok</button>
-               <button type="button" class="scrollchoice">youtube shorts</button>
-               </form>
-            -->
             {{scrollchoice}}
          </div>
       </div>
@@ -53,6 +48,16 @@
             copybtn.textContent = 'Failed';
             setTimeout(() => { copybtn.textContent = 'Copy'; }, 1500);
          }
+      });
+
+      // after a fetch, the buttons disappear, can't delete yet
+      form.addEventListener('submit', async (e) => {
+         e.preventDefault();
+         await fetch('/server', {
+            method: 'POST',
+            body: new URLSearchParams({ action: e.submitter.value }),
+         });
+         maincontainer.hidden = true;
       });
    </script>
 
