@@ -41,7 +41,7 @@ const SERVERPAGE: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/webs
 
 const ALPHABET: &[u8] = b"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
-async fn enter_pincode() -> StatusCode {
+async fn _enter_pincode() -> StatusCode {
     StatusCode::NOT_IMPLEMENTED
 }
 
@@ -113,12 +113,20 @@ async fn choice_form(State(state): State<SharedOptions>) -> Html<String> {
            opts.reels, opts.tiktok, opts.shorts
         )
     };
+
+        let window = match opts.latest_choice {
+        Some(Action::Reels) => r#"<iframe src="https://instagram.com" width="600" height="400"></iframe>"#,
+        Some(Action::Shorts) => r#"<a href="https://www.youtube.com/shorts" target="_blank" rel="noopener"></a>"#,
+        Some(Action::Tiktok) => r#"<iframe src="https://tiktok.com" width="600" height="400"></iframe>"#,
+        _ => "",
+    };
     let code = format!(r#"<span id="codetext">{}</span>"#, opts.latest_pincode);
 
     Html(
         SERVERPAGE
             .replace("{{scrollchoice}}", &choices)
             .replace("{{pincode}}", &code)
+            .replace("{{choicewindows}}", window)
     )
 }
 
@@ -145,7 +153,7 @@ async fn create_server_form(
         _ => {
         }
     }
-    Redirect::to("/server")
+    return Redirect::to("/server")
 }
 
 #[tokio::main]
