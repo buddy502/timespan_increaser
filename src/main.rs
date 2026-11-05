@@ -37,8 +37,11 @@ struct SOptions {
 }
 type SharedOptions = Arc<Mutex<SOptions>>;
 
-const SERVERPAGE: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/website/create_server.html"));
+const C_CHOICE: &str = "{{scrollchoice}}";
+const C_PIN: &str = "{{pincode}}";
+const C_WINDOW: &str = "{{choicewindows}}";
 
+const SERVERPAGE: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/website/create_server.html"));
 const ALPHABET: &[u8] = b"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
 async fn _enter_pincode() -> StatusCode {
@@ -57,10 +60,11 @@ fn create_pincode(state: &SharedOptions) -> String {
         .collect();
 
     opts.latest_pincode = code.clone();
+    opts.pincodes.insert(code.clone());
     return code;
 }
 
-async fn delete_pincode(State(curstate): State<SharedOptions>) -> Redirect {
+async fn delete_pincode(curstate: State<SharedOptions>) -> Redirect {
     // if every user presses the Leave button and there are 0 users destroy pincode
     // too many users would use all the pincodes
     // if leave is pressed and there are 0 counts in all buttons, remove code from hash
@@ -81,7 +85,7 @@ async fn delete_button_count(State(curstate): State<SharedOptions>) -> Redirect 
 
     let mut opts = curstate.lock().unwrap();
 
-    match opts.latest_choice {
+    match opts.latest_choice.take() {
         Some(Action::Reels) => opts.reels = opts.reels.saturating_sub(1),
         Some(Action::Shorts) => opts.shorts = opts.shorts.saturating_sub(1),
         Some(Action::Tiktok) => opts.tiktok = opts.tiktok.saturating_sub(1),
@@ -91,14 +95,12 @@ async fn delete_button_count(State(curstate): State<SharedOptions>) -> Redirect 
     Redirect::to("/")
 }
 
-async fn choice_form(State(state): State<SharedOptions>) -> Html<String> {
-    {
-        let opts = state.lock().unwrap();
-        if opts.latest_pincode.is_empty() {
-            drop(opts);
-            create_pincode(&state);
-        }
+async fn choice_form(state: State<SharedOptions>) -> Html<String> {
+
+    if state.lock().unwrap().latest_pincode.is_empty() {
+        create_pincode(&state);
     }
+
     let opts = state.lock().unwrap();
 
     let choices = if opts.latest_choice.is_some() {
@@ -124,9 +126,9 @@ async fn choice_form(State(state): State<SharedOptions>) -> Html<String> {
 
     Html(
         SERVERPAGE
-            .replace("{{scrollchoice}}", &choices)
-            .replace("{{pincode}}", &code)
-            .replace("{{choicewindows}}", window)
+            .replace(C_CHOICE, &choices)
+            .replace(C_PIN, &code)
+            .replace(C_WINDOW, window)
     )
 }
 
